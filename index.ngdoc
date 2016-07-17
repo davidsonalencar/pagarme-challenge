@@ -49,7 +49,7 @@ To access the API Documentation go to:
 http://localhost:3000/docs/
 ```
 
-### Front-end Technologies
+## Front-end Technologies
 
 - [AngularJS 1.5.x](https://docs.angularjs.org/api)
 - [UIkit](http://getuikit.com/docs/core.html)
