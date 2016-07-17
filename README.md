@@ -1,10 +1,11 @@
 # PagarMe Challenge
 
-Design used for performing a credit card or bank slip transaction and split for two recipients.
+Application used for performing a credit card or bank slip transactions, applies 
+rules split for two recipients and displays the transaction details.
 
 ## Prerequisite Technologies
 
-* *Node.js* - <a href="http://nodejs.org/download/">Download</a> and Install Node.js. 
+* *Node.js* - [Download](http://nodejs.org/download/) and Install Node.js. 
 
 ## Prerequisite Packages
 
@@ -43,6 +44,13 @@ To access the API Documentation go to:
 ```
 http://localhost:3000/docs/
 ```
+
+### Front-end Technologies
+
+- [AngularJS 1.5.x](https://docs.angularjs.org/api)
+- [UIkit](http://getuikit.com/docs/core.html)
+- [jQuery](http://api.jquery.com)
+- [SASS](http://sass-lang.com)
 
 ## License
 [The MIT License](http://opensource.org/licenses/MIT)

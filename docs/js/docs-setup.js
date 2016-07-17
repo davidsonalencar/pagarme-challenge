@@ -10,7 +10,7 @@ NG_DOCS={
       "type": "overview",
       "moduleName": "Guide",
       "shortDescription": "PagarMe Challenge",
-      "keywords": "access api bank boot bower browser build card challenge credit dependencies design development documentation environments frontend guide gulp href http initialization install installation invoke js license loading manage mini mit node npm open org overview packages pagarme performing prerequisite project recipients serve server slip split technologies tool transaction"
+      "keywords": "access angularjs api application applies bank boot bower browser build card challenge credit dependencies details development displays documentation environments front-end frontend guide gulp html http initialization install installation invoke jquery js license loading manage mini mit node npm open org overview packages pagarme performing prerequisite project recipients rules serve server slip split technologies tool transaction transactions"
     },
     {
       "section": "api",
