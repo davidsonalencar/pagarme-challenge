@@ -1,0 +1,43 @@
+<h1><code ng:non-bindable="">validator-server</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">validatorServer</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="validatorserver-directive-page validatorserver-directive-validator-server-page"><p>Diretiva used to automate the display of validation messages based on 
+data obtained by the API.</p>
+</div></div>
+<h2 id="dependencies">Dependencies</h2>
+<ul class="dependencies"><li><code ng:non-bindable=""><a href="#/api/validatorServer.constant:VALIDATOR_SERVER_EVENT">VALIDATOR_SERVER_EVENT</a></code>
+</li>
+<li><code ng:non-bindable=""><a href="#/api/ng.$compile">$compile</a></code>
+</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY validator-server&gt;
+   ...
+&lt;/ANY&gt;</pre>
+</div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="validatorserver-directive-page validatorserver-directive-validator-server-page"><pre class="prettyprint linenums">
+&lt;form name="formField"&gt;
+   &lt;div&gt;
+      &lt;input type="text" name="field" ng-model="field" validator-server="" /&gt;
+   &lt;/div&gt;
+&lt;/form&gt;   
+</pre>
+<h3 id="example-after-processing" id="example_example-after-processing">Example after processing</h3>
+<pre class="prettyprint linenums">
+&lt;form name="formField"&gt;
+   &lt;div&gt;
+      &lt;input type="text" name="field" ng-model="field" validator-server="" /&gt;
+      &lt;div ng-messages="formField.field.$error" class="uk-form-help-block"&gt;
+         &lt;div ng-message="ng-message"&gt;
+            {{formField.field.$error.server}}
+         &lt;/div&gt;
+      &lt;/div&gt;
+   &lt;/div&gt;
+&lt;/form&gt;   
+</pre>
+</div></div>
+</div>

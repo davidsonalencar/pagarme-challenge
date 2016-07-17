@@ -1,0 +1,271 @@
+<h1 class="uk-article-title">Nova Transação</h1>
+
+<form class="uk-form" name="formTransaction" ng-submit="ctrl.save(ctrl.transaction)">
+    
+    <div class="uk-margin">
+        <div class="uk-button-group uk-width-1-1" data-uk-button-radio="">
+            <a 
+                class="uk-button uk-button-primary uk-width-1-2 uk-active" 
+                ng-click="ctrl.transaction.setPaymentMethodCreditCard()"
+            >
+                Cartão de Crédito
+            </a>
+            <a 
+                class="uk-button uk-button-primary uk-width-1-2" 
+                ng-click="ctrl.transaction.setPaymentMethodBoleto()"
+            >
+                Boleto
+            </a>
+        </div>
+    </div>
+
+    <fieldset class="uk-margin-bottom">
+
+        <legend>Pagamento</legend>
+        
+        <div ng-if="ctrl.transaction.isPaymentMethodCreditCard()">
+            
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="amount">Valor</label>
+                <div class="uk-form-controls">
+                    <input 
+                        type="text" 
+                        id="amount" 
+                        name="amount" 
+                        class="uk-width-1-1" 
+                        ng-model="ctrl.transaction.amount" 
+                        core-mask="{{ctrl.transaction.amount / 100 | currency}}" 
+                        validator-server=""
+                    />
+                </div>
+            </div>
+            
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="installments">
+                    Parcelas <span class="uk-text-small">({{ctrl.installmentsAmountLabel(ctrl.transaction)}})</span>
+                </label>
+                <div class="uk-form-controls">
+                    <select 
+                        id="installments" 
+                        name="installments" 
+                        class="uk-width-1-1" 
+                        ng-model="ctrl.transaction.installments"
+                        ng-options="option.id as option.name for option in ctrl.installmentsOptions"
+                        validator-server=""
+                    >
+                    </select>
+                </div>
+            </div>
+
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="card_number">Número do Cartão</label>
+                <div class="uk-form-controls">
+                    <input 
+                        type="text" 
+                        id="card_number" 
+                        name="card_number" 
+                        class="uk-width-1-1" 
+                        ng-model="ctrl.transaction.card_number" 
+                        validator-server=""
+                    />
+                </div>
+            </div>
+            
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="card_holder_name">
+                    Nome <span class="uk-text-small">(como escrito no cartão)</span>
+                </label>
+                <div class="uk-form-controls">
+                    <input 
+                        type="text"
+                        id="card_holder_name" 
+                        name="card_holder_name" 
+                        class="uk-width-1-1" 
+                        ng-model="ctrl.transaction.card_holder_name" 
+                        validator-server=""
+                    />
+                </div>
+            </div>
+            
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="card_expiration_month">Validade</label>
+                <div class="uk-grid">
+                    <div class="uk-width-1-2">
+                        <select 
+                            id="card_expiration_month" 
+                            name="card_expiration_month"
+                            class="uk-width-1-1"
+                            ng-model="ctrl.transaction.card_expiration_month" 
+                            ng-options="option.id as option.name for option in ctrl.cardExpirationMonthOptions"
+                            validator-server=""
+                        >
+                            <option value="">Mês</option>
+                        </select>
+                    </div>
+                    <div class="uk-width-1-2">
+                        <select 
+                            id="card_expiration_year" 
+                            name="card_expiration_year" 
+                            class="uk-width-1-1" 
+                            ng-model="ctrl.transaction.card_expiration_year" 
+                            ng-options="option.id as option.name for option in ctrl.cardExpirationYearOptions"
+                            validator-server=""
+                        >
+                            <option value="">Ano</option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="card_cvv">Código de Segurançca</label>
+                <div class="uk-form-controls">
+                    <input 
+                        type="text" 
+                        id="card_cvv" 
+                        name="card_cvv"
+                        class="uk-width-1-1"
+                        ng-model="ctrl.transaction.card_cvv" 
+                        validator-server=""
+                    />
+                </div>
+            </div>
+
+            
+        </div>
+        
+        <div ng-if="ctrl.transaction.isPaymentMethodBoleto()">
+            
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="amount">Valor</label>
+                <div class="uk-form-controls">
+                    <input 
+                        type="text" 
+                        id="amount" 
+                        name="amount"
+                        class="uk-width-1-1" 
+                        ng-model="ctrl.transaction.amount" 
+                        core-mask="{{ctrl.transaction.amount / 100 | currency}}" 
+                        validator-server=""
+                    />
+                </div>
+            </div>
+            
+        </div>
+        
+    </fieldset>
+    
+    <fieldset class="uk-margin-bottom">
+        
+        <legend>Regras de Divisão</legend>
+        
+        <div>
+            <input 
+                type="hidden"
+                name="split_rules" 
+                ng-model="ctrl.transaction.split_rules" 
+                validator-server=""
+            />
+            <div 
+                class="uk-form-help-block uk-margin-bottom" 
+                ng-messages="formTransaction.split_rules.$error"
+            ></div>
+        </div>
+        
+        <div class="uk-grid" data-uk-grid-margin="">
+            <div 
+                class="uk-width-medium-1-2 uk-row-first" 
+                ng-repeat="split_rule in ctrl.transaction.split_rules"
+            >
+                <div class="uk-panel uk-panel-box">
+                    <h3 class="uk-panel-title">
+                        <label for="split_rules[{{$index}}][recipient_id]">
+                            {{$index+1}}° Recebedor
+                        </label>
+                    </h3>
+                    
+                    <div class="uk-form-row">
+                        <div class="uk-form-controls">
+                            <select 
+                                id="split_rules[{{$index}}][recipient_id]" 
+                                name="split_rules[{{$index}}][recipient_id]" 
+                                class="uk-width-1-1" 
+                                ng-model="split_rule.recipient_id"
+                                ng-options="option.id as option.bank_account.legal_name for option in ctrl.recipientsOptions"
+                            >
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="uk-form-row">
+                        <label class="uk-form-label">Incide taxa de transação</label>
+                        <div class="uk-form-controls">
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="split_rules[{{$index}}][charge_processing_fee]" 
+                                    ng-model="split_rule.charge_processing_fee" 
+                                    ng-value="true"
+                                /> Sim
+                            </label>
+                            <label>
+                                <input 
+                                    type="radio"
+                                    name="split_rules[{{$index}}][charge_processing_fee]" 
+                                    ng-model="split_rule.charge_processing_fee" 
+                                    ng-value="false"
+                                /> Não
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="uk-form-row">
+                        <label class="uk-form-label">Assume o risco da transação</label>
+                        <div class="uk-form-controls">
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="split_rules[{{$index}}][liable]" 
+                                    ng-model="split_rule.liable" 
+                                    ng-value="true"
+                                /> Sim
+                            </label>
+                            <label>
+                                <input 
+                                    type="radio"
+                                    name="split_rules[{{$index}}][liable]" 
+                                    ng-model="split_rule.liable" 
+                                    ng-value="false"
+                                /> Não
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="uk-form-row">
+                        <label class="uk-form-label" for="split_rules[{{$index}}][percentage]">
+                            Percentual <span class="uk-text-small">{{ctrl.labelAmountPercentage()}}</span>
+                        </label>
+                        <div class="uk-form-controls">
+                            <input 
+                                type="number" 
+                                id="split_rules[{{$index}}][percentage]" 
+                                name="split_rules[{{$index}}][percentage]" 
+                                class="uk-width-1-1" 
+                                ng-model="split_rule.percentage"
+                            />
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>      
+        
+    </fieldset>
+    
+    <div class="uk-align-right">
+        <a class="uk-button uk-button-link" type="button" ui-sref="main.home">Cancelar</a>
+        <input type="submit" class="uk-button uk-button-primary" value="Salvar" />
+    </div>
+
+</form>

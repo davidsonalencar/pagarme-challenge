@@ -1,0 +1,51 @@
+<h1><code ng:non-bindable="">TransactionsViewController</code>
+<div><span class="hint">controller in module <code ng:non-bindable="">transactions</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="transactions-controller-page transactions-controller-transactionsviewcontroller-page"><p>This controller will get the data from an existing transaction from API 
+and display the details of this transaction.</p>
+</div></div>
+<h2 id="dependencies">Dependencies</h2>
+<ul class="dependencies"><li><code ng:non-bindable=""><a href="#/api/transactions.service:Transactions">Transactions</a></code>
+</li>
+<li><code ng:non-bindable=""><a href="#/api/transactions.service:TransactionsPayables">TransactionsPayables</a></code>
+</li>
+<li><code ng:non-bindable=""><a href="#/api/recipients.service:Recipients">Recipients</a></code>
+</li>
+<li><code ng:non-bindable=""><a href="#/api/ng.$stateParams">$stateParams</a></code>
+</li>
+</ul>
+<div class="member method"><h2 id="methods">Methods</h2>
+<ul class="methods"><li><h3 id="methods_getlegalnamebankbyrecipient">getLegalNameBankByRecipient(recipient_id)</h3>
+<div class="getlegalnamebankbyrecipient"><div class="getlegalnamebankbyrecipient-page"><p>Gets the legal name bank of a recipient.</p>
+</div><h5 id="methods_getlegalnamebankbyrecipient_parameters">Parameters</h5><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>recipient_id</td><td><a href="" class="label type-hint type-hint-string">String</a></td><td><div class="getlegalnamebankbyrecipient-page"><p>Recipient identifier.</p>
+</div></td></tr></tbody></table><h5 id="methods_getlegalnamebankbyrecipient_returns">Returns</h5><table class="variables-matrix"><tr><td><a href="" class="label type-hint type-hint-string">String</a></td><td><div class="getlegalnamebankbyrecipient-page"><p>Legal name bank.</p>
+</div></td></tr></table></div>
+</li>
+<li><h3 id="methods_getpayablesbysplitrule">getPayablesBySplitRule(payables, split_rule_id)</h3>
+<div class="getpayablesbysplitrule"><div class="getpayablesbysplitrule-page"><p>Returns only the payables of a split rule.</p>
+</div><h5 id="methods_getpayablesbysplitrule_parameters">Parameters</h5><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>payables</td><td><a href="" class="label type-hint type-hint-array">Array</a></td><td><div class="getpayablesbysplitrule-page"><p>List of the transaction payables.</p>
+</div></td></tr><tr><td>split_rule_id</td><td><a href="" class="label type-hint type-hint-string">String</a></td><td><div class="getpayablesbysplitrule-page"><p>Split rule identifier.</p>
+</div></td></tr></tbody></table><h5 id="methods_getpayablesbysplitrule_returns">Returns</h5><table class="variables-matrix"><tr><td><a href="" class="label type-hint type-hint-array">Array</a></td><td><div class="getpayablesbysplitrule-page"><p>List of the transaction payables filtred.</p>
+</div></td></tr></table></div>
+</li>
+<li><h3 id="methods_gettotalliquidamountpayablesbysplitrule">getTotalLiquidAmountPayablesBySplitRule(transaction, split_rule)</h3>
+<div class="gettotalliquidamountpayablesbysplitrule"><div class="gettotalliquidamountpayablesbysplitrule-page"><p>Calculate the total net value of a recipient based on the split rules.
+and payables.</p>
+</div><h5 id="methods_gettotalliquidamountpayablesbysplitrule_parameters">Parameters</h5><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>transaction</td><td><a href="" class="label type-hint type-hint-transactions">Transactions</a></td><td><div class="gettotalliquidamountpayablesbysplitrule-page"><p>Transaction service.</p>
+</div></td></tr><tr><td>split_rule</td><td><a href="" class="label type-hint type-hint-object">Object</a></td><td><div class="gettotalliquidamountpayablesbysplitrule-page"><p>Split rule object.</p>
+</div></td></tr></tbody></table><h5 id="methods_gettotalliquidamountpayablesbysplitrule_returns">Returns</h5><table class="variables-matrix"><tr><td><a href="" class="label type-hint type-hint-number">Number</a></td><td><div class="gettotalliquidamountpayablesbysplitrule-page"><p>Total net value of a recipient.</p>
+</div></td></tr></table></div>
+</li>
+</ul>
+</div>
+<div class="member property"><h2 id="properties">Properties</h2>
+<ul class="properties"><li><h3 id="properties_transaction">transaction</h3>
+<div class="transaction"><h5 id="properties_transaction_returns">Returns</h5><table class="variables-matrix"><tr><td><a href="" class="label type-hint type-hint-transactions">Transactions</a></td><td><div class="transaction-page"><p><a href="#/api/transactions.service:Transactions">Transactions</a> service for show details in view.</p>
+</div></td></tr></table></div>
+</li>
+</ul>
+</div>
+</div>

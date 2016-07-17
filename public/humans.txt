@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Davidson Alencar -- manager -- @davidsonalencar
+
+# THANKS
+
+    Pagar.me
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    AngularJS

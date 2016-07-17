@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: validator-server/directives/validator-server.directive.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: validator-server/directives/validator-server.directive.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>(function () {
+    'use strict';
+
+    angular.module('validatorServer').directive('validatorServer', ['VALIDATOR_SERVER_EVENT', '$compile',
+        ValidatorServerDirective
+    ]);
+
+    function ValidatorServerDirective(VALIDATOR_SERVER_EVENT, $compile) {
+        return {
+            restrict: 'A',
+            require: ['ngModel', '^form'],
+            link: function (scope, element, attrs, ctrls) {
+
+                scope.$evalAsync(function () {
+
+                    /**
+                     * Inicializa variaveis com os requires
+                     */
+                    var ngModelCtrl = ctrls[0];
+                    var formCtrl = ctrls[1];
+
+                    if (!ngModelCtrl.$name) {
+                        return;
+                    }
+                    
+                    buildNgMessage(scope, element, formCtrl, ngModelCtrl);
+
+                    /**
+                     * Quando o evento submit do form for disparado verifica se foi retornado mensagem de erro
+                     */
+                    var unbindEvent = scope.$on(VALIDATOR_SERVER_EVENT, function (event, data) {
+                        
+                        var errors = data.errors.filter(function (error) {
+                            return error.parameter_name === ngModelCtrl.$name;
+                        });
+                        
+                        if (errors &amp;&amp; errors.length) {
+                            ngModelCtrl.$setValidity('server', false);
+                            
+                            angular.forEach(errors, function (error) {
+                                
+                                error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1);
+
+                                if (!angular.isString(ngModelCtrl.$error.server)) {
+                                    ngModelCtrl.$error.server = error.message;
+                                } else {
+                                    ngModelCtrl.$error.server = ngModelCtrl.$error.server.replace(/\.$/, '') + '; ' + error.message;
+                                }
+                                
+                            });
+                        }
+                        
+                    });
+
+                    /**
+                     * Zera mensagens de erros
+                     */
+                    ngModelCtrl.$validators.server = function () {
+                        ngModelCtrl.$setValidity('server', true);
+                        delete ngModelCtrl.$error.server;
+                        return true;
+                    };
+
+                    /**
+                     * On destroy
+                     */
+                    scope.$on('$destroy', function () {
+                        unbindEvent();
+                        unbindEvent = null;
+                    });
+                    element.on('$destroy', function () {
+                        scope.$destroy();
+                    });
+                });
+            }
+
+        };
+        
+        function buildNgMessage(scope, element, formCtrl, ngModelCtrl) {
+            
+            var container = element.closest('div'),
+                messages = container.find('ng-messages,[ng-messages]'),
+                message = null;
+
+            if (messages.length) {
+                // Elemento message
+                message = $('&lt;div/>', {
+                    'ng-message': 'server'
+                }).text('{{' + formCtrl.$name + '[\'' + ngModelCtrl.$name + '\'].$error.server}}');
+                messages.append(message);
+            }
+            // Compila conteudo
+            messages = $compile(messages)(scope);
+            
+            // Adiciona depois do elemento input
+            //element.after(messages);
+            container.append(messages);
+            
+        }
+        
+    }
+
+})();</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-bankAccounts.html">bankAccounts</a></li><li><a href="module-core.html">core</a></li><li><a href="module-pagarMe.html">pagarMe</a></li><li><a href="module-recipients.html">recipients</a></li><li><a href="module-transactions.html">transactions</a></li><li><a href="module-validatorServer.html">validatorServer</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Jul 16 2016 13:24:56 GMT-0300 (BRT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<h1 class="uk-article-title">Recebedores</h1>
+
+<div class="uk-overflow-container">
+    <p>
+        <a class="uk-button" type="button" ui-sref="^.create">Adicionar Recebedor</a>
+    </p>
+    <table class="uk-table uk-table-striped" ng-if="ctrl.recipients.length">
+        <thead>
+            <tr>
+                <th>Intervalo Transf.</th>
+                <th>Dia Transf.</th>
+                <th>Transf. Autom.</th>
+                <th>Banco</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="recipient in ctrl.recipients">
+                <td>{{recipient.transfer_interval | recipientsTransferIntervalLabel}}</td>
+                <td>{{recipient.transfer_day}}</td>
+                <td>{{recipient.transfer_enabled | coreYesNoLabel}}</td>
+                <td>
+                    {{recipient.bank_account.legal_name}}
+                    <div class="uk-text-small">
+                        {{recipient.bank_account | bankAccountsLabel}}
+                    </div>
+                </td>
+                <td>
+                    <a class="uk-button uk-button-primary" type="button" ui-sref="^.update({id:recipient.id})">Alterar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

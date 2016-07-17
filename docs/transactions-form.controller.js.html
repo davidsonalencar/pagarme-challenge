@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: transactions/controllers/transactions-form.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: transactions/controllers/transactions-form.controller.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>(function () {
+    'use strict';
+
+    angular.module('transactions').controller('TransactionsFormController', [
+        'PagarMe',
+        'Transactions',
+        'recipientsData',
+        '$filter',
+        '$state',
+        '$q',
+        TransactionsFormController
+    ]);
+
+    function TransactionsFormController(PagarMe, Transactions, recipientsData, $filter, $state, $q) {
+        
+        //-- private variables
+        var ctrl = this;
+        
+        //-- public variables
+        ctrl.recipientsData = recipientsData;
+
+        ctrl.transaction = new Transactions({
+            card_number: '5184586282959282',
+            card_holder_name: 'Davidson Teste',
+            card_expiration_month: 3,
+            card_expiration_year: 2017,
+            card_cvv: '365',
+            amount: 32082,
+            installments: 1,
+            split_rules: [{
+                recipient_id: recipientsData[0].id,
+                charge_processing_fee: true,
+                liable: true,
+                percentage: 40
+            }, {
+                recipient_id: recipientsData[1].id,
+                charge_processing_fee: true,
+                liable: true,
+                percentage: 60
+            }]
+        });
+        ctrl.transaction.setPaymentMethodCreditCard();
+        
+        ctrl.installmentsOptions = $.map([1,2,3,4,5,6,7,8,9,10,11,12], function(value){
+            return {
+                id: value,
+                name: value+'x'
+            };
+        });
+        
+        ctrl.cardExpirationMonthOptions = $.map([1,2,3,4,5,6,7,8,9,10,11,12], function(value) {
+            return {
+                id: value,
+                name: value
+            };
+        });
+        
+        ctrl.cardExpirationYearOptions = $.map([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14], function(date){
+            var year;
+            return function(value) {
+                year = date.getFullYear()+value;
+                return {
+                    id: year,
+                    name: year
+                };
+            };
+        }(new Date()));
+        
+        ctrl.fieldErrors = {};
+
+        //-- private methods
+
+        //-- public methods
+        ctrl.save = save;
+        ctrl.labelInstallmentsAmount = labelInstallmentsAmount;
+
+        return init();
+        
+        //-- initialization methods
+
+        /**
+         * Realiza a inicialização do controller, configuração de eventos e 
+         * definição de watcher(s)
+         */
+        function init() {
+        }
+        
+        function save(transaction) {
+
+            prepareTransaction(transaction)
+                .then(function(protectedTransaction){
+                    return protectedTransaction.$save();
+                })
+                .then(function(protectedTransaction){
+                    
+                    $state.go('^.view', {
+                        id: protectedTransaction.id
+                    });
+                    
+                });
+            
+        }
+        
+        function labelInstallmentsAmount(transaction){
+            var installmentsAmount = transaction.amount/100/transaction.installments;
+            installmentsAmount = $filter('currency')(installmentsAmount);
+            return transaction.installments+'X de '+installmentsAmount+' sem juros';
+        }
+        
+        function prepareTransaction(transaction) {
+            
+            var protectedTransaction = angular.copy(transaction);
+            
+            delete protectedTransaction.card_number;
+            delete protectedTransaction.card_holder_name;
+            delete protectedTransaction.card_expiration_month;
+            delete protectedTransaction.card_expiration_year;
+            delete protectedTransaction.card_cvv;
+            
+            return $q(function(resolve, reject){
+            
+                if (transaction.isPaymentMethodCreditCard()) {
+                    PagarMe.generateCardHash(transaction).then(function(cardHash){
+
+                        protectedTransaction.card_hash = cardHash;
+                        
+                        resolve(protectedTransaction);
+
+                    }, reject);
+                } else {
+
+                    resolve(protectedTransaction);
+
+                } 
+                
+            });
+            
+        }
+        
+    }
+    
+})();</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-bankAccounts.html">bankAccounts</a></li><li><a href="module-core.html">core</a></li><li><a href="module-pagarMe.html">pagarMe</a></li><li><a href="module-recipients.html">recipients</a></li><li><a href="module-transactions.html">transactions</a></li><li><a href="module-validatorServer.html">validatorServer</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Jul 16 2016 13:24:56 GMT-0300 (BRT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

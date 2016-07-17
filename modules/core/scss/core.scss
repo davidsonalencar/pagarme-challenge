@@ -1,0 +1,29 @@
+
+.uk {
+    &-container {
+        max-width: 600px;
+    }
+    &-form-help-block {
+        font-size: 0.9em;
+        color: #d85030 !important; 
+    }
+    &-panel-box {
+        .uk-table-striped tbody tr:nth-of-type(odd) {
+            background: white;
+        }
+        &-table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+    }
+} 
+
+.ng-invalid {
+    &[type="text"], 
+    &[type="number"], 
+    select#{&} {
+        border-color: #dc8d99 !important;
+        background: #fff7f8 !important;
+        color: #d85030 !important; 
+    }
+}

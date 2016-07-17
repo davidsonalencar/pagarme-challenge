@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: transactions/controllers/transactions-view.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: transactions/controllers/transactions-view.controller.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>(function () {
+    'use strict';
+
+    angular.module('transactions').controller('TransactionsViewController', [
+        'Transactions',
+        'TransactionsPayables',
+        'Recipients',
+        '$stateParams',
+        TransactionsViewController
+    ]);
+
+    function TransactionsViewController(Transactions, TransactionsPayables, Recipients, $stateParams) {
+        
+        //-- private variables
+        var ctrl = this;
+        var recipientsData = [];
+        
+        //-- public variables
+        ctrl.transaction = new Transactions({
+            id: '000000'
+        });
+
+        //-- private methods
+
+        //-- public methods
+        ctrl.getPayablesBySplitRule = getPayablesBySplitRule;
+        ctrl.getTotalLiquidAmountPayablesBySplitRule = getTotalLiquidAmountPayablesBySplitRule;
+        ctrl.getLegalNameBankByRecipient = getLegalNameBankByRecipient;
+        
+        return init();
+        
+        //-- initialization methods
+
+        /**
+         * Realiza a inicialização do controller, configuração de eventos e 
+         * definição de watcher(s)
+         */
+        function init() {
+            
+            getRecipients()
+                .then(function(recipients){
+                    recipientsData = recipients;
+                    return getTransaction($stateParams.id);
+                })
+                .then(function(transaction){
+                    ctrl.transaction = transaction;
+                    return getTransactionPayables(ctrl.transaction.id);
+                })
+                .then(function(payables){
+                    ctrl.transaction.payables = payables;                    
+                });
+            
+        }
+        
+        function getTransaction(id) {
+            
+            return Transactions.get({
+                id: id
+            }).$promise;
+            
+        }
+        
+        function getTransactionPayables(transaction_id) {
+            
+            return TransactionsPayables.query({
+                transaction_id: transaction_id
+            }).$promise;
+            
+        }
+        
+        function getRecipients() {
+            
+            return Recipients.query().$promise;
+            
+        }
+        
+        function getPayablesBySplitRule(payables, split_rule_id) {
+            
+            if (!angular.isArray(payables)) {
+                return [];
+            }
+            
+            return payables.filter(function(payable){
+                return payable.split_rule_id === split_rule_id;
+            });
+            
+        }
+        
+        function getTotalLiquidAmountPayablesBySplitRule(transaction, split_rule) {
+            
+            var total = 0;
+            
+            if (transaction.isPaymentMethodCreditCard()) {
+                
+                var payablesFromSplitRule = getPayablesBySplitRule(transaction.payables, split_rule.id);
+            
+                angular.forEach(payablesFromSplitRule, function(payable){
+                    total += (payable.amount - payable.fee);
+                });
+
+            } else
+            if (transaction.isPaymentMethodBoleto()) {
+                
+                total = transaction.amount - (transaction.amount * split_rule.percentage / 100);
+                
+            }
+        
+            return total / 100;
+            
+        }
+        
+        function getLegalNameBankByRecipient(recipient_id) {
+            
+            var recipientFiltred = recipientsData.filter(function(recipient){
+                return recipient.id === recipient_id;
+            });
+            
+            if (!recipientFiltred.length) {
+                return '';
+            }
+            
+            return recipientFiltred[0].bank_account.legal_name;
+            
+        }
+        
+        
+    }
+    
+})();</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-bankAccounts.html">bankAccounts</a></li><li><a href="module-core.html">core</a></li><li><a href="module-pagarMe.html">pagarMe</a></li><li><a href="module-recipients.html">recipients</a></li><li><a href="module-transactions.html">transactions</a></li><li><a href="module-validatorServer.html">validatorServer</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Jul 16 2016 13:24:56 GMT-0300 (BRT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

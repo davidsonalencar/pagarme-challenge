@@ -1,0 +1,164 @@
+<h1 class="uk-article-title">Transação #{{ctrl.transaction.id}}</h1>
+
+<div class="uk-form">
+ 
+    <fieldset class="uk-margin-bottom" ng-if="ctrl.transaction.isPaymentMethodCreditCard()">
+
+        <legend>Cartão de Crédito</legend>
+        
+        <div class="uk-panel uk-panel-box">
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-1-2">
+                    Número
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.card_first_digits}}********{{ctrl.transaction.card_last_digits}}
+                    </h3>
+                </div>
+                <div class="uk-width-1-2">
+                    Portador
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.card_holder_name}}
+                    </h3>
+                </div>
+                <div class="uk-width-1-2">
+                    Parcelas
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.installments}}x
+                    </h3>
+                </div>
+                <div class="uk-width-1-2">
+                    Bandeira
+                    <h3 class="uk-panel-title uk-margin-bottom-remove">
+                        {{ctrl.transaction.card_brand}}
+                    </h3>
+                </div>
+            </div>
+        </div>
+        
+    </fieldset>
+    
+    <fieldset class="uk-margin-bottom" ng-if="ctrl.transaction.isPaymentMethodBoleto()">
+
+        <legend>Boleto</legend>
+        
+        <div class="uk-panel uk-panel-box">
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-1-1">
+                    Vencimento
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.boleto_expiration_date | date}}
+                    </h3>
+                </div>
+                <div class="uk-width-1-1">
+                    Código de Barras
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.boleto_barcode}}
+                    </h3>
+                </div>
+                <div class="uk-width-1-1">
+                    URL do Boleto
+                    <h3 class="uk-panel-title uk-text-truncate">
+                        <a href="{{ctrl.transaction.boleto_url}}" target="_blank">{{ctrl.transaction.boleto_url}}</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        
+    </fieldset>
+    
+    <fieldset class="uk-margin-bottom">
+
+        <legend>Detalhes da Transação</legend>
+        
+        <div class="uk-panel uk-panel-box">
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-1-2">
+                    Operadora
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.acquirer_name}}
+                    </h3>
+                </div>
+                <div class="uk-width-1-2">
+                    Resposta da Operadora
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.acquirer_response_code || '---'}}
+                    </h3>
+                </div>
+                <div class="uk-width-1-2">
+                    Código de Autorização
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.authorization_code || '---'}}
+                    </h3>
+                </div>
+                <div class="uk-width-1-2">
+                    TID <span class="uk-text-small">(Identificador da Transação)</span>
+                    <h3 class="uk-panel-title uk-margin-bottom-remove">
+                        {{ctrl.transaction.tid}}
+                    </h3>
+                </div>
+                <div class="uk-width-1-2">
+                    NSU <span class="uk-text-small">(Número Sequencial Único)</span>
+                    <h3 class="uk-panel-title uk-margin-bottom-remove">
+                        {{ctrl.transaction.nsu}}
+                    </h3>
+                </div>
+            </div>
+        </div>
+        
+    </fieldset>
+    
+    <fieldset class="uk-margin-bottom">
+
+        <legend>Recebedore(s) / {{ctrl.transaction.split_rules.length || 0}}</legend>
+        
+        
+        <div class="uk-grid" data-uk-grid-margin>
+            <div class="uk-width-1-3">
+                <div class="uk-panel uk-panel-box">
+                    <h3 class="uk-panel-title">
+                        {{ctrl.transaction.amount / 100 | currency}}
+                    </h3>
+                    Parcelado em <span class="uk-text-bold">{{ctrl.transaction.installments}}x</span>
+                </div>
+            </div>
+            <div class="uk-width-2-3">
+                <div class="uk-panel uk-panel-box" ng-repeat="split_rule in ctrl.transaction.split_rules"> 
+                    <h3 class="uk-panel-title">
+                        {{split_rule.percentage}}% >
+                        {{ctrl.getLegalNameBankByRecipient(split_rule.recipient_id)}}
+                    </h3>
+                    <table class="uk-table uk-table-striped">
+                        <tfoot>
+                            <tr>
+                                <td colspan="3">
+                                    {{split_rule.liable ? 'É' : 'Não é'}}
+                                    responsável pelo <span class="uk-text-bold">chargeback</span>
+                                </td>
+                                <td class="uk-text-large uk-text-success">
+                                    {{ctrl.getTotalLiquidAmountPayablesBySplitRule(ctrl.transaction, split_rule) | currency}}
+                                </td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr ng-repeat="payable in ctrl.getPayablesBySplitRule(ctrl.transaction.payables, split_rule.id) | orderBy:payable.payment_date">
+                                <td class="uk-text-bold">{{$index+1}}</td>
+                                <td>{{payable.amount / 100 | currency}}</td>
+                                <td>
+                                    {{payable.payment_date | date:'dd/MM'}}
+                                    <div class="uk-text-small" ng-class="{'uk-text-danger':payable.fee}">
+                                        {{payable.fee / 100 | currency}}
+                                    </div>
+                                </td>
+                                <td class="uk-text-success uk-text-bold">
+                                    {{(payable.amount - payable.fee) / 100 | currency}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+    </fieldset>
+    
+</div>
