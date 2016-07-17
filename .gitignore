@@ -1,0 +1,35 @@
+# --------------------
+# OSX Files
+# --------------------
+.DS_Store
+
+# --------------------
+# Eclipse or Nodeclipse "Enide Studio" Files
+# --------------------
+.project
+.settings/
+local.properties
+
+# --------------------
+# Netbeans Files
+# --------------------
+nbproject
+
+# --------------------
+# Node Files
+# --------------------
+.nodemonignore
+npm-debug.log
+node_modules/
+
+# --------------------
+# Bower Files
+# --------------------
+public/lib
+
+# --------------------
+# App Files
+# --------------------
+public/index.css
+public/index.html
+public/lib
