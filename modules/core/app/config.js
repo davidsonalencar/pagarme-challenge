@@ -1,5 +1,3 @@
-// Inicializa a configuração do módulo da aplicativo para aplicação AngularJS
-
 /**
  * @ngdoc object
  * @name core.app:AppConfig
